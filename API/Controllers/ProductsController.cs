@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+﻿using API.Controllers;
+using API.DTOs;
 using AutoMapper;
 using Infrastructure.Data;
 using Core.Entities;
@@ -9,9 +10,8 @@ using Core.Specifications;
 
 namespace Infrastructure.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+  
+    public class ProductsController : BaseApiController
 
     {
         private readonly IGenereicRepository<Product> _productRepository;
