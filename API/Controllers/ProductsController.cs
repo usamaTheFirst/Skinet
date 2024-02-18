@@ -1,6 +1,7 @@
 ﻿using API.Controllers;
 using API.DTOs;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Infrastructure.Data;
 using Core.Entities;
@@ -11,7 +12,7 @@ using Core.Specifications;
 
 namespace Infrastructure.Controllers
 {
-  
+
     public class ProductsController : BaseApiController
 
     {
@@ -30,12 +31,16 @@ namespace Infrastructure.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDTO>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDTO>>> GetProducts([FromQuery] ProductSpecParams? productParams)
         {
-            var specs = new ProductsWithTypesAndBrandsSpecification();
+            var specs = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+            var totalItems = await _productRepository.CountAsync(countSpec);
             var products = await _productRepository.ListAsync(specs);
-            var ProductsToReturn = _mapper.Map<IReadOnlyList<ProductToReturnDTO>>(products);
-            return Ok( ProductsToReturn );
+
+            var data = _mapper.Map<IReadOnlyList<ProductToReturnDTO>>(products);
+
+            return Ok(new Pagination<ProductToReturnDTO>{PageIndex = productParams.PageIndex, PageSize = productParams.PageSize, Count = totalItems, Data = data}) ;
         }
 
         [HttpGet("{id:int}")]
@@ -63,7 +68,7 @@ namespace Infrastructure.Controllers
             //    ProductType = product.ProductType.Name
             //};
 
-            return Ok(productToReturn );
+            return Ok(productToReturn);
         }
         [HttpGet("Brands")]
         public async Task<ActionResult<Product>> GetProductBrands()
