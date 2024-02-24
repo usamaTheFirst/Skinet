@@ -7,13 +7,15 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent } from './core/nav-bar/nav-bar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
+import { ShopModule } from './shop/shop.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavBarComponent
+    AppComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -21,7 +23,9 @@ import { HttpClientModule } from '@angular/common/http';
     TooltipModule,
 BrowserAnimationsModule,
 BsDatepickerModule.forRoot(),
-HttpClientModule
+HttpClientModule,
+CoreModule,
+ShopModule,
   ],
   providers: [
     provideClientHydration()
